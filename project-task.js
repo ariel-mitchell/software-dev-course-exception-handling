@@ -57,11 +57,28 @@ while (true) {
     if (action === "add") {
         let animal = readlineSync.question("Enter the animal's name: ");
         let fee = Number(readlineSync.question("Enter the adoption fee: "));
-        addAnimal(animal, fee);
+        
+        try {
+            addAnimal(animal, fee);
+        } catch (err) {
+            console.log(`We caught a(n) ${err.name}! ${err.message}`);
+            while (!animal) {
+                animal = readlineSync.question("Enter the animal's name: ");
+            }
+            while (fee < 0) {
+                fee = Number(readlineSync.question("Please enter a positive integer for the adoption fee: "));
+            }
+            addAnimal(animal, fee);
+        }
+        
         console.log(`${animal} added with a fee of $${fee}.`);
     } else if (action === "fee") {
         let animal = readlineSync.question("Enter the animal's name to find its adoption fee: ");
-        console.log(`${animal}'s adoption fee is $${getAdoptionFee(animal)}.`);
+        try {
+            console.log(`${animal}'s adoption fee is $${getAdoptionFee(animal)}.`);
+        } catch (err) {
+            console.log(err.message);
+        }
     } else {
         console.log("Invalid action. Please choose 'add', 'fee', or 'exit'.");
     }
